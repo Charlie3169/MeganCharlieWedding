@@ -195,13 +195,6 @@ function initCountdown() {
 }
 
 function initNav() {
-  if (!navToggle || !navMenu) return;
-  navToggle.addEventListener('click', () => {
-    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-    navToggle.setAttribute('aria-expanded', String(!expanded));
-    navMenu.classList.toggle('open');
-  });
-
   document.querySelectorAll('[data-nav]').forEach((link) => {
     link.addEventListener('click', (event) => {
       event.preventDefault();
@@ -209,9 +202,18 @@ function initNav() {
       if (targetId && targetId.startsWith('#')) {
         document.querySelector(targetId)?.scrollIntoView({ behavior: 'smooth' });
       }
-      navMenu.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
+      if (navMenu && navToggle) {
+        navMenu.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
     });
+  });
+
+  if (!navToggle || !navMenu) return;
+  navToggle.addEventListener('click', () => {
+    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+    navToggle.setAttribute('aria-expanded', String(!expanded));
+    navMenu.classList.toggle('open');
   });
 }
 
