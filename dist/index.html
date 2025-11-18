@@ -58,32 +58,35 @@
   <main>
     <section id="schedule" class="section">
       <div class="section-header">
-        <p class="eyebrow">Weekend lineup</p>
         <h2>Schedule</h2>
-        <p>Join us for the full celebration on September 20, 2026. Detailed timing will appear here once everything is set.</p>
+        <p>Here is the flow for Sunday, September 20, 2026. Times are subject to final invitation details, but this is the celebration cadence.</p>
       </div>
-      <div class="timeline">
-        <article class="timeline-card">
-          <h3>Ceremony</h3>
-          <p class="time">Time TBD • Reverie Dayton Conservatory</p>
-          <p>Exchange vows surrounded by sweeping views in Miamisburg. Dress code and special instructions will follow with the invitation.</p>
-        </article>
-        <article class="timeline-card">
-          <h3>Reception</h3>
-          <p class="time">Immediately after ceremony • Grand Hall</p>
-          <p>Celebrate with dinner, dancing, and heartfelt toasts honoring Megan &amp; Charlie.</p>
-        </article>
-        <article class="timeline-card">
-          <h3>Send-Off Brunch</h3>
-          <p class="time">September 21 • Local café (details soon)</p>
-          <p>Grab coffee and pastries with the newlyweds before heading home.</p>
-        </article>
-      </div>
+      <ul class="schedule-list">
+        <li>
+          <span class="schedule-time">3:30 PM</span>
+          <span class="schedule-event">Guests arrive &amp; enjoy welcome sips in the conservatory</span>
+        </li>
+        <li>
+          <span class="schedule-time">4:30 PM</span>
+          <span class="schedule-event">Ceremony begins among the gardens at Reverie Dayton</span>
+        </li>
+        <li>
+          <span class="schedule-time">5:15 PM</span>
+          <span class="schedule-event">Cocktail hour with small bites &amp; live music</span>
+        </li>
+        <li>
+          <span class="schedule-time">6:30 PM</span>
+          <span class="schedule-event">Dinner service followed by heartfelt toasts</span>
+        </li>
+        <li>
+          <span class="schedule-time">8:00 PM</span>
+          <span class="schedule-event">Dancing, dessert, and late-night send off</span>
+        </li>
+      </ul>
     </section>
 
     <section id="photos" class="section alt">
       <div class="section-header">
-        <p class="eyebrow">Captured moments</p>
         <h2>Photos</h2>
         <p>A handcrafted mosaic keeps the spotlight on the couple until professional photos arrive.</p>
       </div>
@@ -140,19 +143,17 @@
 
     <section id="registry" class="section alt">
       <div class="section-header">
-        <p class="eyebrow">Gifts with meaning</p>
         <h2>Registry</h2>
         <p>An online registry features home essentials, experiences, and honeymoon funds selected by Megan &amp; Charlie.</p>
       </div>
       <div class="registry-panel">
-        <p>Visit the couple’s registry to shop home essentials, experiences, and honeymoon funds.</p>
-        <a class="btn" href="https://www.theknot.com/us/megan-barger-and-charlie-phelps-sep-2026/registry" target="_blank" rel="noreferrer">View registry</a>
+        <p>Visit the couple’s registry to shop curated pieces for their newlywed home.</p>
+        <a class="btn" href="https://www.zola.com/registry/meganandcharlie" target="_blank" rel="noreferrer">View registry</a>
       </div>
     </section>
 
     <section id="rsvp" class="section">
       <div class="section-header">
-        <p class="eyebrow">Let us know</p>
         <h2>RSVP</h2>
         <p>Use the form below to RSVP for yourself or your entire party. Your responses are stored locally so you can revisit and make changes.</p>
       </div>
@@ -163,10 +164,6 @@
             <input type="text" name="contact" required />
           </label>
           <label>
-            Email address
-            <input type="email" name="email" required />
-          </label>
-          <label>
             Phone number
             <input type="tel" name="phone" placeholder="Optional" />
           </label>
@@ -175,15 +172,23 @@
             <input type="text" name="party" placeholder="e.g., The Barger Family" />
           </label>
         </div>
-        <div class="guest-list" id="guest-list" aria-live="polite"></div>
-        <button type="button" class="btn ghost" id="add-guest">Add another guest</button>
         <label>
-          Dietary notes or song requests
-          <textarea name="notes" rows="3" placeholder="Share allergies, access needs, or must-play songs"></textarea>
+          Guest name(s)
+          <input type="text" name="guests" placeholder="List everyone attending" required />
         </label>
+        <fieldset class="meal-options">
+          <legend>Meal preference</legend>
+          <label class="radio-option">
+            <input type="radio" name="meal" value="Beef" checked />
+            Beef
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="meal" value="Chicken" />
+            Chicken
+          </label>
+        </fieldset>
         <div class="form-actions">
           <button type="submit" class="btn">Submit RSVP</button>
-          <button type="reset" class="btn ghost" id="clear-form">Clear saved data</button>
         </div>
       </form>
       <div class="rsvp-summary" id="rsvp-summary" aria-live="polite"></div>
