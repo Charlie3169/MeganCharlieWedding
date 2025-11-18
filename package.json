@@ -1,0 +1,17 @@
+{
+  "name": "megancharliewedding",
+  "version": "1.0.0",
+  "description": "A bespoke recreation of Megan Barger & Charlie Phelps' The Knot website with HTML, CSS, and TypeScript.",
+  "main": "server.js",
+  "scripts": {
+    "build": "node tools/build.js",
+    "start": "npm run build && node server.js"
+  },
+  "keywords": ["wedding", "static-site", "typescript"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

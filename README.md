@@ -1,16 +1,26 @@
-# MeganCharlieWedding
-Take what is in the site.txt file and use it to create simple but feature filled webiste, using html, css, and some typescript. THe site came from the knot. Use a best practice file structure. give it a dockerfile. avoid frotnend framweorks if possible, unles sthere is a very simpel one. this website needs to have:
+# Megan & Charlie Wedding Website
 
-- a few tabs, such as home, schedule, photos, travel, registry, and rsvp.
+This repository rebuilds the public-facing The Knot page for **Megan Barger & Charlie Phelps** (September 20, 2026 • Miamisburg, OH) with accessible HTML, modern CSS, and TypeScript-driven interactivity.
 
-please give this site all fucntionality needed for people to rvsp (for them selves or as a group). it also needs a link to a registry and anything that would come with that.
+## Project structure
+- `src/` — source HTML, CSS, and TypeScript (plus a compiled JS artifact for browsers).
+- `public/` — static resources, including SVG artwork and metadata extracted from the original Knot page.
+- `tools/` — custom build utility that prepares the distributable output.
+- `dist/` — generated site that the Node server and Docker image serve.
+- `server.js` — zero-dependency HTTP server that serves the `dist` folder on **port 2002**.
 
-write a md file explaining the reasoning behidn choices made, and also if a backend server + database is recommended for handling rsvp stuff, or if there is a more elegant solution (emails, third party site).
+## Getting started
+```bash
+npm install    # no external deps, but keeps npm scripts available
+npm run build  # outputs dist/
+npm start      # builds + serves http://localhost:2002
+```
 
-create a public fodler to store all resoruces and assets that are extracted from the orginal knot site. also, the burgundy color that should be used ofr htis site (the backgorund) is this:
+### Docker
+```bash
+docker build -t megan-charlie .
+docker run -p 2002:2002 megan-charlie
+```
 
-offical burgundy color: #2596be
-0x2596be
-
-
-if a port is needed for htis site (as in, if it can't all just come on static html), then serve the site on port 2002. I guess  so if docker
+## RSVP workflow
+The RSVP form supports multiple guests, local persistence, and a generated email summary. For production deployments, pair it with a backend service or trusted third-party form relay (see `reasoning.md` for recommendations).
