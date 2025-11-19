@@ -206,15 +206,13 @@ main {
   opacity: 0.8;
 }
 
-.travel-grid,
-.photo-grid {
+.travel-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
 }
 
 .travel-grid article,
-.photo-card,
 .registry-panel,
 .rsvp-form,
 .meal-options,
@@ -231,55 +229,85 @@ main {
 }
 
 .schedule-list {
-  list-style: disc;
-  list-style-position: inside;
+  list-style: none;
   padding: 0;
   margin: 0 auto;
-  max-width: 520px;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  text-align: left;
 }
 
 .schedule-list li {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
   font-size: 1.05rem;
+  text-align: left;
+  align-items: baseline;
 }
 
 .schedule-time {
-  display: block;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  font-size: 0.85rem;
-  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  min-width: 120px;
 }
 
 .schedule-event {
-  display: block;
   font-weight: 600;
+  max-width: 420px;
 }
 
-.photo-card {
-  cursor: pointer;
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  grid-auto-flow: dense;
+}
+
+.photo-tile {
+  position: relative;
+  border-radius: var(--radius);
   overflow: hidden;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
+  border: 1px solid rgba(253, 247, 239, 0.2);
+  padding-bottom: 100%;
+  background: rgba(253, 247, 239, 0.04);
 }
 
-.photo-card img {
+.photo-tile img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
-.photo-card figcaption {
-  margin-top: auto;
-  padding-top: 1rem;
-  font-weight: 600;
+.photo-tile.span-2 {
+  grid-column: span 2;
+  grid-row: span 2;
 }
 
-.photo-card:hover,
-.photo-card.active {
+@media (max-width: 640px) {
+  .schedule-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .schedule-time {
+    min-width: auto;
+  }
+
+  .photo-tile.span-2 {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+.photo-tile:hover,
+.photo-tile.active {
   border-color: rgba(253, 247, 239, 0.5);
   background: rgba(253, 247, 239, 0.08);
 }
