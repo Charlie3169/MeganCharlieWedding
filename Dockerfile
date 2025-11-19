@@ -1,8 +1,7 @@
 FROM node:18-alpine
 WORKDIR /app
 COPY package.json ./
-RUN npm install --production --ignore-scripts || true
+RUN npm install
 COPY . .
-RUN npm run build
 EXPOSE 2002
 CMD ["npm", "start"]
