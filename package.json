@@ -4,7 +4,8 @@
   "description": "A bespoke wedding site for Megan Barger & Charlie Phelps built with HTML, CSS, and TypeScript.",
   "main": "server.js",
   "scripts": {
-    "build": "node tools/build.js",
+    "build": "webpack --mode production",
+    "dev": "webpack --watch --mode development",
     "start": "npm run build && node server.js"
   },
   "keywords": ["wedding", "static-site", "typescript"],
@@ -13,5 +14,12 @@
   "type": "commonjs",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4"
   }
 }
