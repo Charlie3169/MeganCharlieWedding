@@ -3,5 +3,5 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 COPY . .
-EXPOSE 2002
+EXPOSE 2003
 CMD ["npm", "start"]
