@@ -104,12 +104,12 @@ a {
 }
 
 .hero-heading {
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(2.5rem, 8vw, 6rem);
   margin: 0;
   font-weight: 600;
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
 }
 
@@ -610,7 +610,7 @@ textarea {
 
 @media (max-width: 640px) {
   .hero-heading {
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .countdown-grid {
