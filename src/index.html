@@ -59,27 +59,31 @@
     <section id="schedule" class="section">
       <div class="section-header">
         <h2>Schedule</h2>
-        <p>Here is the flow for Sunday, September 20, 2026. Times are subject to final invitation details, but this is the celebration cadence.</p>
       </div>
       <ul class="schedule-list">
         <li>
           <span class="schedule-time">3:30 PM</span>
+          <span class="schedule-separator" aria-hidden="true">·</span>
           <span class="schedule-event">Guests arrive &amp; enjoy welcome sips in the conservatory</span>
         </li>
         <li>
           <span class="schedule-time">4:30 PM</span>
+          <span class="schedule-separator" aria-hidden="true">·</span>
           <span class="schedule-event">Ceremony begins among the gardens at Reverie Dayton</span>
         </li>
         <li>
           <span class="schedule-time">5:15 PM</span>
+          <span class="schedule-separator" aria-hidden="true">·</span>
           <span class="schedule-event">Cocktail hour with small bites &amp; live music</span>
         </li>
         <li>
           <span class="schedule-time">6:30 PM</span>
+          <span class="schedule-separator" aria-hidden="true">·</span>
           <span class="schedule-event">Dinner service followed by heartfelt toasts</span>
         </li>
         <li>
           <span class="schedule-time">8:00 PM</span>
+          <span class="schedule-separator" aria-hidden="true">·</span>
           <span class="schedule-event">Dancing, dessert, and late-night send off</span>
         </li>
       </ul>
@@ -116,7 +120,6 @@
       <div class="section-header">
         <p class="eyebrow">Make it a getaway</p>
         <h2>Travel &amp; Lodging</h2>
-        <p>All celebrations take place at Reverie Dayton in Miamisburg, Ohio. Below are logistics to help you arrive stress-free.</p>
       </div>
       <div class="travel-grid">
         <article>
@@ -163,7 +166,26 @@
         <h2>RSVP</h2>
         <p>Use the form below to RSVP for yourself or your entire party. Your responses are stored locally so you can revisit and make changes.</p>
       </div>
-      <form class="rsvp-form" id="rsvp-form">
+      <div class="envelope-invite" aria-live="polite">
+        <button
+          type="button"
+          id="rsvp-envelope-btn"
+          class="envelope-button"
+          aria-controls="rsvp-form"
+          aria-expanded="false"
+        >
+          <span class="envelope-shape" aria-hidden="true">
+            <span class="envelope-flap"></span>
+            <span class="envelope-letter">You're invited</span>
+          </span>
+          <span class="wax-seal" aria-hidden="true">
+            <span class="wax-seal-inner">MC</span>
+          </span>
+          <span class="sr-only">Open the invitation to reveal the RSVP form</span>
+        </button>
+        <p class="envelope-prompt" id="envelope-prompt">Tap the envelope to open your RSVP</p>
+      </div>
+      <form class="rsvp-form is-collapsed" id="rsvp-form" aria-describedby="envelope-prompt" hidden>
         <div class="form-grid">
           <label>
             Contact name
@@ -202,7 +224,7 @@
   </main>
   <footer class="site-footer">
     <p>Megan Barger &amp; Charlie Phelps • September 20, 2026 • Miamisburg, OH.</p>
-    <p>Need help? Email <a href="mailto:celebrate@meganandcharlie.com">celebrate@meganandcharlie.com</a>.</p>
+    <p>Need help? Email <a href="mailto:meganofweddingandcharlie@gmail.com">meganofweddingandcharlie@gmail.com</a>.</p>
   </footer>
   <script type="module" src="assets/js/main.js"></script>
 </body>

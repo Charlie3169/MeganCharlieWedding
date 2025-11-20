@@ -8,6 +8,7 @@ interface RSVPFormState {
 
 const weddingDate = new Date('2026-09-20T20:00:00Z');
 const localStorageKey = 'megan-charlie-rsvp';
+let hasStoredRsvp = false;
 
 const state: RSVPFormState = {
   contactName: '',
@@ -22,6 +23,12 @@ const form = document.getElementById('rsvp-form') as HTMLFormElement | null;
 const summaryEl = document.getElementById('rsvp-summary');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.getElementById('nav-menu');
+const envelopeButton = document.getElementById('rsvp-envelope-btn') as HTMLButtonElement | null;
+const envelopePrompt = document.getElementById('envelope-prompt');
+
+function hasExistingState(data: RSVPFormState): boolean {
+  return Boolean(data.contactName || data.partyName || data.guestNames || data.phone);
+}
 
 function restoreState(): void {
   const cached = localStorage.getItem(localStorageKey);
@@ -29,6 +36,7 @@ function restoreState(): void {
     try {
       const parsed: RSVPFormState = JSON.parse(cached);
       Object.assign(state, parsed);
+      hasStoredRsvp = hasExistingState(parsed);
     } catch (error) {
       console.error('Unable to parse saved RSVP state', error);
     }
@@ -73,8 +81,42 @@ function handleSubmit(event: SubmitEvent): void {
     <h3>RSVP saved!</h3>
     <p>We have stored your details locally. Click below to send the summary directly to the couple via email.</p>
     <pre>${summary}</pre>
-    <a class="btn" href="mailto:celebrate@meganandcharlie.com?subject=RSVP&body=${encodeURIComponent(summary)}">Email the couple</a>
+    <a class="btn" href="mailto:meganofweddingandcharlie@gmail.com?subject=RSVP&body=${encodeURIComponent(summary)}">Email the couple</a>
   `;
+}
+
+function revealRsvpForm(): void {
+  if (!form || !envelopeButton) return;
+  form.hidden = false;
+  form.classList.remove('is-collapsed');
+  envelopeButton.classList.add('opened');
+  envelopeButton.setAttribute('aria-expanded', 'true');
+  envelopePrompt?.classList.add('revealed');
+  if (envelopePrompt && !envelopePrompt.dataset.opened) {
+    envelopePrompt.textContent = 'RSVP form ready below';
+    envelopePrompt.dataset.opened = 'true';
+  }
+  const contactInput = form.elements.namedItem('contact');
+  if (contactInput instanceof HTMLInputElement) {
+    contactInput.focus({ preventScroll: true });
+  }
+}
+
+function initEnvelopeInvite(): void {
+  if (!envelopeButton || !form) return;
+  const openForm = () => {
+    const alreadyOpen = !form.hidden;
+    revealRsvpForm();
+    if (!alreadyOpen) {
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  envelopeButton.addEventListener('click', openForm);
+
+  if (hasStoredRsvp) {
+    revealRsvpForm();
+  }
 }
 
 function initCountdown(): void {
@@ -134,5 +176,6 @@ restoreState();
 initCountdown();
 initNav();
 initPhotoInteractions();
+initEnvelopeInvite();
 
 form?.addEventListener('submit', handleSubmit);
