@@ -4,7 +4,7 @@
   --manila: #f0e1c2;
   --manila-shadow: #d8c29b;
   --wax: #6c1f2e;
-  --overlay: rgba(84, 32, 42, 0.75);
+  --overlay: rgba(0, 0, 0, 0.35);
   --radius: 1.25rem;
   --transition: 250ms ease;
   color-scheme: dark;
@@ -75,7 +75,7 @@ a {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--overlay);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, var(--overlay) 70%, rgba(0, 0, 0, 0.5) 100%);
 }
 
 .hero-overlay {
@@ -272,8 +272,10 @@ main {
 }
 
 .photo-grid.real {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .photo-tile {
