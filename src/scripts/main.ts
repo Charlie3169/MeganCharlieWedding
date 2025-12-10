@@ -23,8 +23,9 @@ const form = document.getElementById('rsvp-form') as HTMLFormElement | null;
 const summaryEl = document.getElementById('rsvp-summary');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.getElementById('nav-menu');
-const envelopeButton = document.getElementById('rsvp-envelope-btn') as HTMLButtonElement | null;
 const envelopePrompt = document.getElementById('envelope-prompt');
+const waxSealCanvas = document.getElementById('wax-seal-canvas') as HTMLCanvasElement | null;
+const waxSealButton = document.getElementById('wax-seal-btn') as HTMLButtonElement | null;
 
 function hasExistingState(data: RSVPFormState): boolean {
   return Boolean(data.contactName || data.partyName || data.guestNames || data.phone);
@@ -81,41 +82,47 @@ function handleSubmit(event: SubmitEvent): void {
     <h3>RSVP saved!</h3>
     <p>We have stored your details locally. Click below to send the summary directly to the couple via email.</p>
     <pre>${summary}</pre>
-    <a class="btn" href="mailto:meganofweddingandcharlie@gmail.com?subject=RSVP&body=${encodeURIComponent(summary)}">Email the couple</a>
+    <a class="btn" href="mailto:weddingofmeganandcharlie@gmail.com?subject=RSVP&body=${encodeURIComponent(summary)}">Email the couple</a>
   `;
 }
 
-function revealRsvpForm(): void {
-  if (!form || !envelopeButton) return;
-  form.hidden = false;
-  form.classList.remove('is-collapsed');
-  envelopeButton.classList.add('opened');
-  envelopeButton.setAttribute('aria-expanded', 'true');
-  envelopePrompt?.classList.add('revealed');
-  if (envelopePrompt && !envelopePrompt.dataset.opened) {
-    envelopePrompt.textContent = 'RSVP form ready below';
-    envelopePrompt.dataset.opened = 'true';
+function setRsvpVisibility(isOpen: boolean, shouldFocus = false): void {
+  if (!form) return;
+  form.hidden = !isOpen;
+  form.classList.toggle('is-collapsed', !isOpen);
+  if (waxSealButton) {
+    waxSealButton.setAttribute('aria-expanded', String(isOpen));
   }
-  const contactInput = form.elements.namedItem('contact');
-  if (contactInput instanceof HTMLInputElement) {
-    contactInput.focus({ preventScroll: true });
+  if (envelopePrompt) {
+    envelopePrompt.classList.toggle('revealed', isOpen);
+    if (!envelopePrompt.dataset.opened && isOpen) {
+      envelopePrompt.textContent = 'RSVP form ready below';
+      envelopePrompt.dataset.opened = 'true';
+    }
+  }
+  if (isOpen && shouldFocus) {
+    const contactInput = form.elements.namedItem('contact');
+    if (contactInput instanceof HTMLInputElement) {
+      contactInput.focus({ preventScroll: true });
+    }
   }
 }
 
-function initEnvelopeInvite(): void {
-  if (!envelopeButton || !form) return;
-  const openForm = () => {
-    const alreadyOpen = !form.hidden;
-    revealRsvpForm();
-    if (!alreadyOpen) {
-      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+function revealRsvpForm(shouldFocus = false): void {
+  setRsvpVisibility(true, shouldFocus);
+}
 
-  envelopeButton.addEventListener('click', openForm);
+function collapseRsvpForm(): void {
+  setRsvpVisibility(false);
+}
 
-  if (hasStoredRsvp) {
-    revealRsvpForm();
+function toggleRsvpForm(): void {
+  if (!form) return;
+  if (form.hidden || form.classList.contains('is-collapsed')) {
+    revealRsvpForm(true);
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    collapseRsvpForm();
   }
 }
 
@@ -164,6 +171,58 @@ function initNav(): void {
   });
 }
 
+async function initWaxSeal(): Promise<void> {
+  if (!waxSealCanvas || !waxSealButton) return;
+
+  waxSealButton.addEventListener('click', toggleRsvpForm);
+
+  try {
+    // @ts-ignore external module loaded at runtime
+    const THREE = (await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js')) as any;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0, 5);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: waxSealCanvas, alpha: true, antialias: true });
+    renderer.setSize(waxSealCanvas.clientWidth || 220, waxSealCanvas.clientHeight || 220);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+    scene.add(ambientLight);
+    const keyLight = new THREE.DirectionalLight(0xf7d9c4, 0.9);
+    keyLight.position.set(2, 3, 4);
+    scene.add(keyLight);
+
+    const waxMaterial = new THREE.MeshStandardMaterial({ color: 0x7a2435, roughness: 0.55, metalness: 0.18 });
+    const diskGeometry = new THREE.CircleGeometry(1.6, 128);
+    const disk = new THREE.Mesh(diskGeometry, waxMaterial);
+    disk.rotation.x = -0.5;
+    disk.rotation.z = 0.35;
+    scene.add(disk);
+
+    const crestShape = new THREE.Shape();
+    crestShape.absarc(0, 0, 0.55, 0, Math.PI * 2, false);
+    const crestGeometry = new THREE.ExtrudeGeometry(crestShape, { depth: 0.12, bevelEnabled: true, bevelSize: 0.08, bevelThickness: 0.06, bevelSegments: 6 });
+    const crestMaterial = new THREE.MeshStandardMaterial({ color: 0xf4e7d8, roughness: 0.35, metalness: 0.4 });
+    const crest = new THREE.Mesh(crestGeometry, crestMaterial);
+    crest.position.set(0.2, -0.2, 0.15);
+    crest.rotation.x = -0.45;
+    crest.rotation.z = 0.1;
+    scene.add(crest);
+
+    function animate(): void {
+      crest.rotation.z += 0.006;
+      disk.rotation.z += 0.003;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  } catch (error) {
+    console.error('Three.js could not be loaded for the wax seal interaction.', error);
+  }
+}
+
 function initPhotoInteractions(): void {
   document.querySelectorAll('[data-photo]').forEach((figure) => {
     figure.addEventListener('click', () => {
@@ -176,6 +235,9 @@ restoreState();
 initCountdown();
 initNav();
 initPhotoInteractions();
-initEnvelopeInvite();
+if (hasStoredRsvp) {
+  revealRsvpForm();
+}
+initWaxSeal();
 
 form?.addEventListener('submit', handleSubmit);
