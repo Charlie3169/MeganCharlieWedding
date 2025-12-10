@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 2400" role="img" aria-labelledby="title desc">
+  <title id="title">Save Our Date invitation for Megan Barger and Charlie Phelps</title>
+  <desc id="desc">Burgundy save the date card with illustrated calla lilies and serif typography.</desc>
+  <defs>
+    <linearGradient id="border-fade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ede5dd" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#ede5dd" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#ede5dd" stop-opacity="0.9" />
+    </linearGradient>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:wght@400;600;700&display=swap');
+      .card-bg { fill: #5a1c2a; }
+      .frame { fill: none; stroke: url(#border-fade); stroke-width: 18; rx: 42; ry: 42; }
+      .script { font-family: 'Alex Brush', 'Great Vibes', cursive; fill: #f2e9e3; font-size: 210px; text-anchor: middle; }
+      .serif { font-family: 'Playfair Display', 'Times New Roman', serif; fill: #f2e9e3; text-anchor: middle; }
+      .serif.small { font-size: 48px; letter-spacing: 14px; }
+      .serif.medium { font-size: 72px; letter-spacing: 6px; }
+      .serif.large { font-size: 118px; letter-spacing: 4px; }
+      .serif.city { font-size: 52px; letter-spacing: 4px; }
+      .line { stroke: #f2e9e3; stroke-width: 3; stroke-linecap: round; opacity: 0.9; }
+      .lily { fill: none; stroke: #f2e9e3; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+    </style>
+  </defs>
+  <rect class="card-bg" width="1800" height="2400" rx="80" />
+  <rect x="95" y="95" width="1610" height="2210" class="frame" />
+  <rect x="140" y="140" width="1520" height="2120" class="frame" />
+  <text x="900" y="520" class="script">Save Our Date</text>
+  <g transform="translate(140,300)">
+    <path class="lily" d="M280 400c-40-120 0-250 90-250 110 0 110 160 30 210-60 35-100 20-120-40" />
+    <path class="lily" d="M320 360c-30 30-40 100-34 190" />
+    <path class="lily" d="M1340 400c-40-120 0-250 90-250 110 0 110 160 30 210-60 35-100 20-120-40" />
+    <path class="lily" d="M1380 360c-30 30-40 100-34 190" />
+  </g>
+  <g transform="translate(0,680)">
+    <text x="900" y="0" class="serif small">FOR THE WEDDING OF</text>
+    <text x="900" y="190" class="serif large">Megan &amp; Charlie</text>
+    <text x="900" y="330" class="serif medium">SEPTEMBER 20, 2026</text>
+    <line x1="540" x2="1260" y1="380" y2="380" class="line" />
+    <text x="900" y="470" class="serif city">9095 Washington Church Rd</text>
+    <text x="900" y="540" class="serif city">Miamisburg, OH 45342</text>
+    <line x1="520" x2="1280" y1="620" y2="620" class="line" />
+    <text x="900" y="730" class="serif small">FORMAL INVITATION TO FOLLOW</text>
+  </g>
+</svg>

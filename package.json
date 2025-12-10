@@ -15,6 +15,9 @@
   "engines": {
     "node": ">=18.0.0"
   },
+  "dependencies": {
+    "three": "^0.164.1"
+  },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
     "ts-loader": "^9.5.1",

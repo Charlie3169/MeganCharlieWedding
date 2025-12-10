@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="assets/css/main.css" />
@@ -163,6 +163,7 @@
         <h2>RSVP</h2>
         <p>Use the form below to RSVP for yourself or your entire party. Your responses are stored locally so you can revisit and make changes.</p>
       </div>
+      <!-- Original envelope invite preserved for reference
       <div class="envelope-invite" aria-live="polite">
         <button
           type="button"
@@ -178,6 +179,26 @@
           <span class="sr-only">Open the invitation to reveal the RSVP form</span>
         </button>
         <p class="envelope-prompt" id="envelope-prompt">Tap the envelope to open your RSVP</p>
+      </div>
+      -->
+
+      <div class="invitation-hero" aria-live="polite">
+        <figure class="invitation-card">
+          <img src="public/images/envelopes/save-our-date.svg" alt="Save the date invitation design" />
+        </figure>
+        <div class="wax-seal-panel">
+          <p class="envelope-prompt" id="envelope-prompt">Tap the wax seal to open or close your RSVP</p>
+          <button
+            type="button"
+            class="wax-seal-button"
+            id="wax-seal-btn"
+            aria-controls="rsvp-form"
+            aria-expanded="false"
+          >
+            <canvas id="wax-seal-canvas" width="220" height="220" aria-hidden="true"></canvas>
+            <span class="sr-only">Toggle the RSVP form</span>
+          </button>
+        </div>
       </div>
       <form class="rsvp-form is-collapsed" id="rsvp-form" aria-describedby="envelope-prompt" hidden>
         <div class="form-grid">
@@ -218,7 +239,7 @@
   </main>
   <footer class="site-footer">
     <p>Megan Barger &amp; Charlie Phelps • September 20, 2026 • Miamisburg, OH.</p>
-    <p>Need help? Email <a href="mailto:meganofweddingandcharlie@gmail.com">meganofweddingandcharlie@gmail.com</a>.</p>
+    <p>Need help? Email <a href="mailto:weddingofmeganandcharlie@gmail.com">weddingofmeganandcharlie@gmail.com</a>.</p>
   </footer>
   <script type="module" src="assets/js/main.js"></script>
 </body>
