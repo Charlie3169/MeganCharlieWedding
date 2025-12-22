@@ -54,7 +54,7 @@ a {
 
 .hero {
   position: relative;
-  min-height: 110vh;
+  min-height: 150vh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -69,6 +69,7 @@ a {
   pointer-events: none;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-media::after {
