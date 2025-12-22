@@ -23,6 +23,26 @@ body {
   min-height: 100vh;
 }
 
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(253, 247, 239, 0.35);
+  z-index: 3;
+  pointer-events: none;
+}
+
+body::before {
+  left: clamp(1rem, 4vw, 3.5rem);
+}
+
+body::after {
+  right: clamp(1rem, 4vw, 3.5rem);
+}
+
 img {
   max-width: 100%;
   display: block;
@@ -60,6 +80,7 @@ a {
   align-items: center;
   justify-content: center;
   text-align: center;
+  z-index: 1;
 }
 
 .hero-media {
@@ -179,7 +200,29 @@ a {
 }
 
 main {
+  position: relative;
   background: var(--burgundy);
+  z-index: 1;
+}
+
+main::before,
+main::after {
+  content: '';
+  position: absolute;
+  left: clamp(1rem, 4vw, 3.5rem);
+  right: clamp(1rem, 4vw, 3.5rem);
+  height: 1px;
+  background: rgba(253, 247, 239, 0.35);
+  z-index: 3;
+  pointer-events: none;
+}
+
+main::before {
+  top: 0.75rem;
+}
+
+main::after {
+  bottom: 0.75rem;
 }
 
 .section {
@@ -274,9 +317,9 @@ main {
 }
 
 .photo-grid.real {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 0.75rem;
-  max-width: 1400px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -299,7 +342,7 @@ main {
 
 .photo-grid.real .photo-tile {
   padding-bottom: 0;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
   border-color: transparent;
   background: rgba(253, 247, 239, 0.08);
@@ -565,6 +608,8 @@ textarea {
   padding: 2.5rem 1rem;
   background: rgba(253, 247, 239, 0.06);
   border-top: none;
+  position: relative;
+  z-index: 1;
 }
 
 .invitation-hero {
