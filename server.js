@@ -13,7 +13,8 @@ const mimeTypes = {
   '.json': 'application/json; charset=UTF-8',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg'
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif'
 };
 
 function sendFile(filePath, res) {
