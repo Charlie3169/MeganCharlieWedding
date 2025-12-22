@@ -190,15 +190,11 @@
           aria-controls="rsvp-form"
           aria-expanded="false"
         >
-          <span class="envelope-letter" aria-hidden="true"></span>
-          <img class="envelope-image" src="public/images/envelopes/envelope.png" alt="Invitation envelope" />
-          <span class="sr-only">Toggle the RSVP form</span>
+          <canvas id="envelope-canvas" width="560" height="420" aria-hidden="true"></canvas>
+          <span class="sr-only">Open the RSVP form</span>
         </button>
-        <div class="wax-seal-panel">
-          <p class="envelope-prompt" id="envelope-prompt">Click the envelope to open or close your RSVP</p>
-        </div>
       </div>
-      <form class="rsvp-form is-collapsed" id="rsvp-form" aria-describedby="envelope-prompt" hidden>
+      <form class="rsvp-form is-collapsed" id="rsvp-form" hidden>
         <div class="form-grid">
           <label>
             Contact name

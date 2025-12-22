@@ -23,8 +23,8 @@ const form = document.getElementById('rsvp-form') as HTMLFormElement | null;
 const summaryEl = document.getElementById('rsvp-summary');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.getElementById('nav-menu');
-const envelopePrompt = document.getElementById('envelope-prompt');
 const envelopeButton = document.getElementById('envelope-toggle') as HTMLButtonElement | null;
+const envelopeCanvas = document.getElementById('envelope-canvas') as HTMLCanvasElement | null;
 
 function hasExistingState(data: RSVPFormState): boolean {
   return Boolean(data.contactName || data.partyName || data.guestNames || data.phone);
@@ -91,9 +91,6 @@ function setRsvpVisibility(isOpen: boolean, shouldFocus = false): void {
   form.classList.toggle('is-collapsed', !isOpen);
   if (envelopeButton) {
     envelopeButton.setAttribute('aria-expanded', String(isOpen));
-  }
-  if (envelopePrompt) {
-    envelopePrompt.classList.toggle('revealed', isOpen);
   }
   if (isOpen && shouldFocus) {
     const contactInput = form.elements.namedItem('contact');
@@ -166,9 +163,117 @@ function initNav(): void {
   });
 }
 
-function initEnvelope(): void {
-  if (!envelopeButton) return;
+async function initEnvelope(): Promise<void> {
+  if (!envelopeButton || !envelopeCanvas) return;
   envelopeButton.addEventListener('click', toggleRsvpForm);
+
+  // @ts-ignore external module loaded at runtime
+  const THREE = (await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js')) as any;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0, 7);
+
+  const renderer = new THREE.WebGLRenderer({ canvas: envelopeCanvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  const resizeRenderer = (): void => {
+    const { clientWidth, clientHeight } = envelopeCanvas;
+    const width = clientWidth || 560;
+    const height = clientHeight || 420;
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  };
+  resizeRenderer();
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+  scene.add(ambientLight);
+  const keyLight = new THREE.DirectionalLight(0xf7d9c4, 1.1);
+  keyLight.position.set(2.5, 3.5, 4);
+  scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  fillLight.position.set(-2.5, -1, 3);
+  scene.add(fillLight);
+
+  const envelopeGroup = new THREE.Group();
+  scene.add(envelopeGroup);
+
+  const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xf1e4d0, roughness: 0.75, metalness: 0.05 });
+  const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xe3d3b8, roughness: 0.8, metalness: 0.05 });
+  const flapMaterial = new THREE.MeshStandardMaterial({ color: 0xf7ead8, roughness: 0.7, metalness: 0.08 });
+  const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xfdf7ef, roughness: 0.4, metalness: 0.05 });
+  const sealMaterial = new THREE.MeshStandardMaterial({ color: 0x7a2435, roughness: 0.5, metalness: 0.2 });
+
+  const baseGeometry = new THREE.BoxGeometry(5.2, 3.3, 0.35);
+  const base = new THREE.Mesh(baseGeometry, paperMaterial);
+  base.position.set(0, -0.1, 0);
+  envelopeGroup.add(base);
+
+  const frontGeometry = new THREE.PlaneGeometry(5.2, 3.3);
+  const front = new THREE.Mesh(frontGeometry, accentMaterial);
+  front.position.set(0, -0.1, 0.2);
+  envelopeGroup.add(front);
+
+  const flapGeometry = new THREE.PlaneGeometry(5.2, 2.5);
+  const flap = new THREE.Mesh(flapGeometry, flapMaterial);
+  flap.position.set(0, 1.1, 0.21);
+  flap.rotation.x = Math.PI * 0.05;
+  flap.rotation.z = Math.PI;
+  envelopeGroup.add(flap);
+
+  const letterGeometry = new THREE.PlaneGeometry(4.2, 2.8);
+  const letter = new THREE.Mesh(letterGeometry, letterMaterial);
+  letter.position.set(0, -0.2, 0.3);
+  envelopeGroup.add(letter);
+
+  const sealGeometry = new THREE.CircleGeometry(0.45, 64);
+  const seal = new THREE.Mesh(sealGeometry, sealMaterial);
+  seal.position.set(0, -0.1, 0.32);
+  envelopeGroup.add(seal);
+
+  envelopeGroup.rotation.x = -0.15;
+  envelopeGroup.rotation.y = 0.1;
+
+  let hoverTarget = 0;
+  let hoverProgress = 0;
+  let openTarget = 0;
+  let openProgress = 0;
+
+  envelopeButton.addEventListener('pointerenter', () => {
+    hoverTarget = 1;
+  });
+  envelopeButton.addEventListener('pointerleave', () => {
+    hoverTarget = 0;
+  });
+
+  const updateOpenTarget = (): void => {
+    const isOpen = envelopeButton.getAttribute('aria-expanded') === 'true';
+    openTarget = isOpen ? 1 : 0;
+  };
+  updateOpenTarget();
+
+  const observer = new MutationObserver(updateOpenTarget);
+  observer.observe(envelopeButton, { attributes: true, attributeFilter: ['aria-expanded'] });
+
+  window.addEventListener('resize', resizeRenderer);
+
+  const animate = (): void => {
+    hoverProgress += (hoverTarget - hoverProgress) * 0.08;
+    openProgress += (openTarget - openProgress) * 0.06;
+    const combined = Math.min(1, openProgress + hoverProgress * 0.35);
+
+    flap.rotation.x = Math.PI * 0.05 - combined * 1.15;
+    letter.position.y = -0.2 + combined * 1.15;
+    seal.position.y = -0.1 + combined * 0.05;
+    envelopeGroup.position.y = combined * 0.15;
+    envelopeGroup.rotation.z = combined * 0.04;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  };
+
+  animate();
 }
 
 function initPhotoInteractions(): void {
