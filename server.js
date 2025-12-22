@@ -13,7 +13,8 @@ const mimeTypes = {
   '.json': 'application/json; charset=UTF-8',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg'
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif'
 };
 
 function sendFile(filePath, res) {
@@ -31,7 +32,13 @@ function sendFile(filePath, res) {
 
 const server = http.createServer((req, res) => {
   const urlPath = req.url === '/' ? '/index.html' : req.url;
-  const sanitized = path.normalize(urlPath).replace(/^\.\.+/, '');
+  let decodedPath = urlPath;
+  try {
+    decodedPath = decodeURIComponent(urlPath);
+  } catch (error) {
+    decodedPath = urlPath;
+  }
+  const sanitized = path.normalize(decodedPath).replace(/^\.\.+/, '');
   const filePath = path.join(distDir, sanitized);
   if (filePath.startsWith(distDir) && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     sendFile(filePath, res);
