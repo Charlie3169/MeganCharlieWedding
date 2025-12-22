@@ -21,7 +21,7 @@
     <div
       class="hero-media"
       aria-hidden="true"
-      style="background-image: url('public/images/actual-images/OhioEngagement-193.jpg')" 
+      style="background-image: url('public/images/actual-images/OhioEngagement-193.jpg'); background-position: center 20%; background-size: auto 120%;" 
     ></div> <!-- Make this image larger vertically, i would like to see more of it take up the screen -->
     <div class="hero-overlay">
       <p class="hero-script" aria-label="The wedding of">the wedding of</p>
@@ -183,21 +183,19 @@
       -->
 
       <div class="invitation-hero" aria-live="polite">
-        <figure class="invitation-card">
-          <img src="public/images/envelopes/save-our-date.svg" alt="Save the date invitation design" />
-        </figure>
+        <button
+          type="button"
+          class="envelope-stage"
+          id="envelope-toggle"
+          aria-controls="rsvp-form"
+          aria-expanded="false"
+        >
+          <canvas id="envelope-canvas" width="520" height="360" aria-hidden="true"></canvas>
+          <span class="sr-only">Toggle the RSVP form</span>
+        </button>
         <div class="wax-seal-panel">
-          <p class="envelope-prompt" id="envelope-prompt">Tap the wax seal to open or close your RSVP</p>
-          <button
-            type="button"
-            class="wax-seal-button"
-            id="wax-seal-btn"
-            aria-controls="rsvp-form"
-            aria-expanded="false"
-          >
-            <canvas id="wax-seal-canvas" width="220" height="220" aria-hidden="true"></canvas>
-            <span class="sr-only">Toggle the RSVP form</span>
-          </button>
+          <p class="envelope-prompt" id="envelope-prompt">Hover near the envelope to peek inside, then click to open or close your RSVP</p>
+          <span class="envelope-caption">An animated keepsake in Three.js.</span>
         </div>
       </div>
       <form class="rsvp-form is-collapsed" id="rsvp-form" aria-describedby="envelope-prompt" hidden>

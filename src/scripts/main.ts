@@ -24,8 +24,8 @@ const summaryEl = document.getElementById('rsvp-summary');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.getElementById('nav-menu');
 const envelopePrompt = document.getElementById('envelope-prompt');
-const waxSealCanvas = document.getElementById('wax-seal-canvas') as HTMLCanvasElement | null;
-const waxSealButton = document.getElementById('wax-seal-btn') as HTMLButtonElement | null;
+const envelopeCanvas = document.getElementById('envelope-canvas') as HTMLCanvasElement | null;
+const envelopeButton = document.getElementById('envelope-toggle') as HTMLButtonElement | null;
 
 function hasExistingState(data: RSVPFormState): boolean {
   return Boolean(data.contactName || data.partyName || data.guestNames || data.phone);
@@ -90,8 +90,8 @@ function setRsvpVisibility(isOpen: boolean, shouldFocus = false): void {
   if (!form) return;
   form.hidden = !isOpen;
   form.classList.toggle('is-collapsed', !isOpen);
-  if (waxSealButton) {
-    waxSealButton.setAttribute('aria-expanded', String(isOpen));
+  if (envelopeButton) {
+    envelopeButton.setAttribute('aria-expanded', String(isOpen));
   }
   if (envelopePrompt) {
     envelopePrompt.classList.toggle('revealed', isOpen);
@@ -171,10 +171,10 @@ function initNav(): void {
   });
 }
 
-async function initWaxSeal(): Promise<void> {
-  if (!waxSealCanvas || !waxSealButton) return;
+async function initEnvelope(): Promise<void> {
+  if (!envelopeCanvas || !envelopeButton) return;
 
-  waxSealButton.addEventListener('click', toggleRsvpForm);
+  envelopeButton.addEventListener('click', toggleRsvpForm);
 
   try {
     // @ts-ignore external module loaded at runtime
@@ -182,44 +182,95 @@ async function initWaxSeal(): Promise<void> {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 5);
+    camera.position.set(0, 0, 6);
 
-    const renderer = new THREE.WebGLRenderer({ canvas: waxSealCanvas, alpha: true, antialias: true });
-    renderer.setSize(waxSealCanvas.clientWidth || 220, waxSealCanvas.clientHeight || 220);
+    const renderer = new THREE.WebGLRenderer({ canvas: envelopeCanvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const resizeRenderer = (): void => {
+      const { clientWidth, clientHeight } = envelopeCanvas;
+      const height = clientHeight || 360;
+      const width = clientWidth || 520;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+    resizeRenderer();
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
     scene.add(ambientLight);
-    const keyLight = new THREE.DirectionalLight(0xf7d9c4, 0.9);
-    keyLight.position.set(2, 3, 4);
+    const keyLight = new THREE.DirectionalLight(0xf7d9c4, 1);
+    keyLight.position.set(2.5, 3, 4);
     scene.add(keyLight);
 
-    const waxMaterial = new THREE.MeshStandardMaterial({ color: 0x7a2435, roughness: 0.55, metalness: 0.18 });
-    const diskGeometry = new THREE.CircleGeometry(1.6, 128);
-    const disk = new THREE.Mesh(diskGeometry, waxMaterial);
-    disk.rotation.x = -0.5;
-    disk.rotation.z = 0.35;
-    scene.add(disk);
+    const envelopeGroup = new THREE.Group();
+    scene.add(envelopeGroup);
 
-    const crestShape = new THREE.Shape();
-    crestShape.absarc(0, 0, 0.55, 0, Math.PI * 2, false);
-    const crestGeometry = new THREE.ExtrudeGeometry(crestShape, { depth: 0.12, bevelEnabled: true, bevelSize: 0.08, bevelThickness: 0.06, bevelSegments: 6 });
-    const crestMaterial = new THREE.MeshStandardMaterial({ color: 0xf4e7d8, roughness: 0.35, metalness: 0.4 });
-    const crest = new THREE.Mesh(crestGeometry, crestMaterial);
-    crest.position.set(0.2, -0.2, 0.15);
-    crest.rotation.x = -0.45;
-    crest.rotation.z = 0.1;
-    scene.add(crest);
+    const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xf1dcc2, roughness: 0.7, metalness: 0.05 });
+    const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xe0c29a, roughness: 0.75, metalness: 0.08 });
+    const flapMaterial = new THREE.MeshStandardMaterial({ color: 0xf8ead8, roughness: 0.6, metalness: 0.1 });
+    const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xfdf7ef, roughness: 0.4, metalness: 0.05 });
+
+    const baseGeometry = new THREE.BoxGeometry(4.4, 2.6, 0.2);
+    const base = new THREE.Mesh(baseGeometry, paperMaterial);
+    base.position.set(0, -0.2, 0);
+    envelopeGroup.add(base);
+
+    const frontGeometry = new THREE.PlaneGeometry(4.4, 2.6);
+    const front = new THREE.Mesh(frontGeometry, accentMaterial);
+    front.position.set(0, -0.2, 0.12);
+    envelopeGroup.add(front);
+
+    const sideGeometry = new THREE.PlaneGeometry(2.2, 2.6);
+    const leftSide = new THREE.Mesh(sideGeometry, accentMaterial);
+    leftSide.position.set(-1.1, -0.2, 0.11);
+    leftSide.rotation.y = Math.PI * 0.5;
+    envelopeGroup.add(leftSide);
+
+    const rightSide = new THREE.Mesh(sideGeometry, accentMaterial);
+    rightSide.position.set(1.1, -0.2, 0.11);
+    rightSide.rotation.y = -Math.PI * 0.5;
+    envelopeGroup.add(rightSide);
+
+    const flapGeometry = new THREE.PlaneGeometry(4.4, 2.2);
+    const flap = new THREE.Mesh(flapGeometry, flapMaterial);
+    flap.position.set(0, 1.1, 0.11);
+    flap.rotation.x = Math.PI * 0.05;
+    flap.rotation.z = Math.PI;
+    envelopeGroup.add(flap);
+
+    const letterGeometry = new THREE.PlaneGeometry(3.6, 2.2);
+    const letter = new THREE.Mesh(letterGeometry, letterMaterial);
+    letter.position.set(0, -0.1, 0.15);
+    envelopeGroup.add(letter);
+
+    envelopeGroup.rotation.x = -0.2;
+    envelopeGroup.rotation.y = 0.15;
+
+    let hoverTarget = 0;
+    let hoverProgress = 0;
+
+    envelopeButton.addEventListener('pointerenter', () => {
+      hoverTarget = 1;
+    });
+    envelopeButton.addEventListener('pointerleave', () => {
+      hoverTarget = 0;
+    });
+
+    window.addEventListener('resize', resizeRenderer);
 
     function animate(): void {
-      crest.rotation.z += 0.006;
-      disk.rotation.z += 0.003;
+      hoverProgress += (hoverTarget - hoverProgress) * 0.08;
+      flap.rotation.x = Math.PI * 0.05 - hoverProgress * 1.1;
+      letter.position.y = -0.1 + hoverProgress * 0.9;
+      envelopeGroup.position.y = hoverProgress * 0.2;
+      envelopeGroup.rotation.z = hoverProgress * 0.05;
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
 
     animate();
   } catch (error) {
-    console.error('Three.js could not be loaded for the wax seal interaction.', error);
+    console.error('Three.js could not be loaded for the envelope interaction.', error);
   }
 }
 
@@ -238,6 +289,6 @@ initPhotoInteractions();
 if (hasStoredRsvp) {
   revealRsvpForm();
 }
-initWaxSeal();
+initEnvelope();
 
 form?.addEventListener('submit', handleSubmit);
