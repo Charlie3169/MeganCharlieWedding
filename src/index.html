@@ -161,7 +161,7 @@
     <section id="rsvp" class="section">
       <div class="section-header">
         <h2>RSVP</h2>
-        <p>Use the form below to RSVP for yourself or your entire party. Your responses are stored locally so you can revisit and make changes.</p>
+        <p>Click the envelope below to RSVP.</p>
       </div>
       <!-- Original envelope invite preserved for reference
       <div class="envelope-invite" aria-live="polite">
@@ -190,12 +190,12 @@
           aria-controls="rsvp-form"
           aria-expanded="false"
         >
-          <canvas id="envelope-canvas" width="520" height="360" aria-hidden="true"></canvas>
+          <span class="envelope-letter" aria-hidden="true"></span>
+          <img class="envelope-image" src="public/images/envelopes/envelope.png" alt="Invitation envelope" />
           <span class="sr-only">Toggle the RSVP form</span>
         </button>
         <div class="wax-seal-panel">
-          <p class="envelope-prompt" id="envelope-prompt">Hover near the envelope to peek inside, then click to open or close your RSVP</p>
-          <span class="envelope-caption">An animated keepsake in Three.js.</span>
+          <p class="envelope-prompt" id="envelope-prompt">Click the envelope to open or close your RSVP</p>
         </div>
       </div>
       <form class="rsvp-form is-collapsed" id="rsvp-form" aria-describedby="envelope-prompt" hidden>

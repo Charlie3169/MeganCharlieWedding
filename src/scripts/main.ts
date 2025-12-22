@@ -24,7 +24,6 @@ const summaryEl = document.getElementById('rsvp-summary');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.getElementById('nav-menu');
 const envelopePrompt = document.getElementById('envelope-prompt');
-const envelopeCanvas = document.getElementById('envelope-canvas') as HTMLCanvasElement | null;
 const envelopeButton = document.getElementById('envelope-toggle') as HTMLButtonElement | null;
 
 function hasExistingState(data: RSVPFormState): boolean {
@@ -95,10 +94,6 @@ function setRsvpVisibility(isOpen: boolean, shouldFocus = false): void {
   }
   if (envelopePrompt) {
     envelopePrompt.classList.toggle('revealed', isOpen);
-    if (!envelopePrompt.dataset.opened && isOpen) {
-      envelopePrompt.textContent = 'RSVP form ready below';
-      envelopePrompt.dataset.opened = 'true';
-    }
   }
   if (isOpen && shouldFocus) {
     const contactInput = form.elements.namedItem('contact');
@@ -171,107 +166,9 @@ function initNav(): void {
   });
 }
 
-async function initEnvelope(): Promise<void> {
-  if (!envelopeCanvas || !envelopeButton) return;
-
+function initEnvelope(): void {
+  if (!envelopeButton) return;
   envelopeButton.addEventListener('click', toggleRsvpForm);
-
-  try {
-    // @ts-ignore external module loaded at runtime
-    const THREE = (await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js')) as any;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 6);
-
-    const renderer = new THREE.WebGLRenderer({ canvas: envelopeCanvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    const resizeRenderer = (): void => {
-      const { clientWidth, clientHeight } = envelopeCanvas;
-      const height = clientHeight || 360;
-      const width = clientWidth || 520;
-      renderer.setSize(width, height, false);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    };
-    resizeRenderer();
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
-    scene.add(ambientLight);
-    const keyLight = new THREE.DirectionalLight(0xf7d9c4, 1);
-    keyLight.position.set(2.5, 3, 4);
-    scene.add(keyLight);
-
-    const envelopeGroup = new THREE.Group();
-    scene.add(envelopeGroup);
-
-    const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xf1dcc2, roughness: 0.7, metalness: 0.05 });
-    const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xe0c29a, roughness: 0.75, metalness: 0.08 });
-    const flapMaterial = new THREE.MeshStandardMaterial({ color: 0xf8ead8, roughness: 0.6, metalness: 0.1 });
-    const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xfdf7ef, roughness: 0.4, metalness: 0.05 });
-
-    const baseGeometry = new THREE.BoxGeometry(4.4, 2.6, 0.2);
-    const base = new THREE.Mesh(baseGeometry, paperMaterial);
-    base.position.set(0, -0.2, 0);
-    envelopeGroup.add(base);
-
-    const frontGeometry = new THREE.PlaneGeometry(4.4, 2.6);
-    const front = new THREE.Mesh(frontGeometry, accentMaterial);
-    front.position.set(0, -0.2, 0.12);
-    envelopeGroup.add(front);
-
-    const sideGeometry = new THREE.PlaneGeometry(2.2, 2.6);
-    const leftSide = new THREE.Mesh(sideGeometry, accentMaterial);
-    leftSide.position.set(-1.1, -0.2, 0.11);
-    leftSide.rotation.y = Math.PI * 0.5;
-    envelopeGroup.add(leftSide);
-
-    const rightSide = new THREE.Mesh(sideGeometry, accentMaterial);
-    rightSide.position.set(1.1, -0.2, 0.11);
-    rightSide.rotation.y = -Math.PI * 0.5;
-    envelopeGroup.add(rightSide);
-
-    const flapGeometry = new THREE.PlaneGeometry(4.4, 2.2);
-    const flap = new THREE.Mesh(flapGeometry, flapMaterial);
-    flap.position.set(0, 1.1, 0.11);
-    flap.rotation.x = Math.PI * 0.05;
-    flap.rotation.z = Math.PI;
-    envelopeGroup.add(flap);
-
-    const letterGeometry = new THREE.PlaneGeometry(3.6, 2.2);
-    const letter = new THREE.Mesh(letterGeometry, letterMaterial);
-    letter.position.set(0, -0.1, 0.15);
-    envelopeGroup.add(letter);
-
-    envelopeGroup.rotation.x = -0.2;
-    envelopeGroup.rotation.y = 0.15;
-
-    let hoverTarget = 0;
-    let hoverProgress = 0;
-
-    envelopeButton.addEventListener('pointerenter', () => {
-      hoverTarget = 1;
-    });
-    envelopeButton.addEventListener('pointerleave', () => {
-      hoverTarget = 0;
-    });
-
-    window.addEventListener('resize', resizeRenderer);
-
-    function animate(): void {
-      hoverProgress += (hoverTarget - hoverProgress) * 0.08;
-      flap.rotation.x = Math.PI * 0.05 - hoverProgress * 1.1;
-      letter.position.y = -0.1 + hoverProgress * 0.9;
-      envelopeGroup.position.y = hoverProgress * 0.2;
-      envelopeGroup.rotation.z = hoverProgress * 0.05;
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  } catch (error) {
-    console.error('Three.js could not be loaded for the envelope interaction.', error);
-  }
 }
 
 function initPhotoInteractions(): void {
