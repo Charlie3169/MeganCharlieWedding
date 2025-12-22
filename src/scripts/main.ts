@@ -199,41 +199,56 @@ async function initEnvelope(): Promise<void> {
   const envelopeGroup = new THREE.Group();
   scene.add(envelopeGroup);
 
-  const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xf1e4d0, roughness: 0.75, metalness: 0.05 });
-  const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xe3d3b8, roughness: 0.8, metalness: 0.05 });
-  const flapMaterial = new THREE.MeshStandardMaterial({ color: 0xf7ead8, roughness: 0.7, metalness: 0.08 });
-  const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xfdf7ef, roughness: 0.4, metalness: 0.05 });
-  const sealMaterial = new THREE.MeshStandardMaterial({ color: 0x7a2435, roughness: 0.5, metalness: 0.2 });
+  const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xf6ead7, roughness: 0.65, metalness: 0.08 });
+  const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xead8bf, roughness: 0.68, metalness: 0.08 });
+  const flapMaterial = new THREE.MeshStandardMaterial({ color: 0xfff3e2, roughness: 0.6, metalness: 0.1 });
+  const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xfffbf3, roughness: 0.35, metalness: 0.05 });
+  const sealMaterial = new THREE.MeshStandardMaterial({ color: 0x8d2f3f, roughness: 0.45, metalness: 0.22 });
 
-  const baseGeometry = new THREE.BoxGeometry(5.2, 3.3, 0.35);
+  const baseGeometry = new THREE.BoxGeometry(5.4, 3.4, 0.4);
   const base = new THREE.Mesh(baseGeometry, paperMaterial);
-  base.position.set(0, -0.1, 0);
+  base.position.set(0, -0.05, 0);
   envelopeGroup.add(base);
 
-  const frontGeometry = new THREE.PlaneGeometry(5.2, 3.3);
+  const frontGeometry = new THREE.PlaneGeometry(5.4, 3.4);
   const front = new THREE.Mesh(frontGeometry, accentMaterial);
-  front.position.set(0, -0.1, 0.2);
+  front.position.set(0, -0.05, 0.22);
   envelopeGroup.add(front);
 
-  const flapGeometry = new THREE.PlaneGeometry(5.2, 2.5);
-  const flap = new THREE.Mesh(flapGeometry, flapMaterial);
-  flap.position.set(0, 1.1, 0.21);
-  flap.rotation.x = Math.PI * 0.05;
-  flap.rotation.z = Math.PI;
-  envelopeGroup.add(flap);
+  const frontFlapShape = new THREE.Shape();
+  frontFlapShape.moveTo(-2.7, 0);
+  frontFlapShape.lineTo(2.7, 0);
+  frontFlapShape.lineTo(0, -1.75);
+  frontFlapShape.lineTo(-2.7, 0);
+  const frontFlapGeometry = new THREE.ShapeGeometry(frontFlapShape);
+  const frontFlap = new THREE.Mesh(frontFlapGeometry, accentMaterial);
+  frontFlap.position.set(0, 0.45, 0.23);
+  envelopeGroup.add(frontFlap);
 
-  const letterGeometry = new THREE.PlaneGeometry(4.2, 2.8);
+  const flapGeometry = new THREE.PlaneGeometry(5.4, 2.6);
+  const flap = new THREE.Mesh(flapGeometry, flapMaterial);
+  flap.position.set(0, 1.45, 0.24);
+  flap.rotation.x = Math.PI * 0.02;
+  flap.rotation.z = Math.PI;
+
+  const flapPivot = new THREE.Group();
+  flapPivot.position.set(0, 1.45, 0.24);
+  flap.position.set(0, -0.05, 0);
+  flapPivot.add(flap);
+  envelopeGroup.add(flapPivot);
+
+  const letterGeometry = new THREE.BoxGeometry(4.1, 2.5, 0.18);
   const letter = new THREE.Mesh(letterGeometry, letterMaterial);
-  letter.position.set(0, -0.2, 0.3);
+  letter.position.set(0, -0.4, 0.05);
   envelopeGroup.add(letter);
 
-  const sealGeometry = new THREE.CircleGeometry(0.45, 64);
+  const sealGeometry = new THREE.CircleGeometry(0.5, 64);
   const seal = new THREE.Mesh(sealGeometry, sealMaterial);
-  seal.position.set(0, -0.1, 0.32);
+  seal.position.set(0, -0.05, 0.3);
   envelopeGroup.add(seal);
 
-  envelopeGroup.rotation.x = -0.15;
-  envelopeGroup.rotation.y = 0.1;
+  envelopeGroup.rotation.x = -0.12;
+  envelopeGroup.rotation.y = 0.08;
 
   let hoverTarget = 0;
   let hoverProgress = 0;
@@ -263,9 +278,9 @@ async function initEnvelope(): Promise<void> {
     openProgress += (openTarget - openProgress) * 0.06;
     const combined = Math.min(1, openProgress + hoverProgress * 0.35);
 
-    flap.rotation.x = Math.PI * 0.05 - combined * 1.15;
-    letter.position.y = -0.2 + combined * 1.15;
-    seal.position.y = -0.1 + combined * 0.05;
+    flapPivot.rotation.x = Math.PI * 0.02 - combined * 1.25;
+    letter.position.y = -0.4 + combined * 1.2;
+    seal.position.y = -0.05 + combined * 0.05;
     envelopeGroup.position.y = combined * 0.15;
     envelopeGroup.rotation.z = combined * 0.04;
 

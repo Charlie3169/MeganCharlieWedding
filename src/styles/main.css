@@ -274,8 +274,8 @@ main {
 }
 
 .photo-grid.real {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -299,21 +299,12 @@ main {
 
 .photo-grid.real .photo-tile {
   padding-bottom: 0;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
   border-color: transparent;
   background: rgba(253, 247, 239, 0.08);
   position: relative;
   overflow: hidden;
-}
-
-.photo-grid.real .photo-tile.tall {
-  aspect-ratio: 3 / 4;
-  grid-row: span 2;
-}
-
-.photo-grid.real .photo-tile.wide {
-  aspect-ratio: 16 / 9;
 }
 
 .photo-grid.real .photo-tile::after {
@@ -324,19 +315,19 @@ main {
   background: radial-gradient(circle at center, transparent 60%, rgba(84, 32, 42, 0.85) 100%);
 }
 
-.photo-tile.span-2 {
-  grid-column: span 2;
-  grid-row: span 2;
+.registry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.registry-actions .btn {
+  flex: 1 1 180px;
 }
 
 @media (max-width: 640px) {
-  .photo-tile.span-2 {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-
-  .photo-grid.real .photo-tile.tall {
-    grid-row: span 1;
+  .photo-grid.real .photo-tile {
     aspect-ratio: 4 / 3;
   }
 }
@@ -524,8 +515,9 @@ textarea {
 
 .meal-options {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
 }
 
 .meal-options legend {
@@ -534,6 +526,7 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.85rem;
+  flex-basis: 100%;
 }
 
 .radio-option {
