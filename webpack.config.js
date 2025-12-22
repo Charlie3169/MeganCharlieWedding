@@ -17,6 +17,13 @@ module.exports = {
         test: /\.ts$/i,
         use: 'ts-loader',
         exclude: /node_modules/
+      },
+      {
+        test: /\.gif$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/media/[name][ext]'
+        }
       }
     ]
   },
