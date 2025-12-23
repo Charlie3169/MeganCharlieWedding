@@ -2,9 +2,12 @@ const { spawn } = require('child_process');
 
 const isWindows = process.platform === 'win32';
 const npmCommand = isWindows ? 'npm.cmd' : 'npm';
-const nodeCommand = isWindows ? 'node.exe' : 'node';
+const nodeCommand = process.execPath;
+const npmExecPath = process.env.npm_execpath;
 
-const webpackProcess = spawn(npmCommand, ['run', 'dev'], { stdio: 'inherit' });
+const webpackProcess = npmExecPath
+  ? spawn(nodeCommand, [npmExecPath, 'run', 'dev'], { stdio: 'inherit' })
+  : spawn(npmCommand, ['run', 'dev'], { stdio: 'inherit' });
 const serverProcess = spawn(nodeCommand, ['server.js'], { stdio: 'inherit' });
 
 const shutdown = (signal) => {
