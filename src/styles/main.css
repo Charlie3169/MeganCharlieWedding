@@ -23,6 +23,7 @@ body {
   min-height: 100vh;
 }
 
+
 img {
   max-width: 100%;
   display: block;
@@ -54,12 +55,13 @@ a {
 
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 150vh;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  z-index: 1;
 }
 
 .hero-media {
@@ -69,6 +71,7 @@ a {
   pointer-events: none;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-media::after {
@@ -178,7 +181,9 @@ a {
 }
 
 main {
+  position: relative;
   background: var(--burgundy);
+  z-index: 1;
 }
 
 .section {
@@ -186,6 +191,38 @@ main {
   text-align: center;
   background: radial-gradient(circle at 20% 20%, rgba(253, 247, 239, 0.05), rgba(84, 32, 42, 0.95));
   border-top: none;
+  position: relative;
+}
+
+.section::after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  height: 50%;
+  left: clamp(1.25rem, 4vw, 3.75rem);
+  right: clamp(1.25rem, 4vw, 3.75rem);
+  background-image:
+    linear-gradient(to right, rgba(253, 247, 239, 0.3), rgba(253, 247, 239, 0.3)),
+    linear-gradient(to right, rgba(253, 247, 239, 0.3), rgba(253, 247, 239, 0.3));
+  background-position: left center, right center;
+  background-size: 1px 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section:first-of-type::before,
+.section + .section::before {
+  content: '';
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  width: min(55%, 520px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: rgba(253, 247, 239, 0.35);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .section.alt {
@@ -195,6 +232,24 @@ main {
 .section-header {
   max-width: 720px;
   margin: 0 auto 2rem;
+}
+
+.section-header h2 {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(60%, 240px);
+  height: 3px;
+  background: rgba(253, 247, 239, 0.6);
+  transform: translateX(-50%);
+  border-radius: 999px;
 }
 
 .eyebrow {
@@ -273,9 +328,9 @@ main {
 }
 
 .photo-grid.real {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  max-width: 1280px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
+  max-width: 1680px;
   margin: 0 auto;
 }
 
@@ -306,15 +361,6 @@ main {
   overflow: hidden;
 }
 
-.photo-grid.real .photo-tile.tall {
-  aspect-ratio: 3 / 4;
-  grid-row: span 2;
-}
-
-.photo-grid.real .photo-tile.wide {
-  aspect-ratio: 16 / 9;
-}
-
 .photo-grid.real .photo-tile::after {
   content: '';
   position: absolute;
@@ -323,19 +369,19 @@ main {
   background: radial-gradient(circle at center, transparent 60%, rgba(84, 32, 42, 0.85) 100%);
 }
 
-.photo-tile.span-2 {
-  grid-column: span 2;
-  grid-row: span 2;
+.registry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.registry-actions .btn {
+  flex: 1 1 180px;
 }
 
 @media (max-width: 640px) {
-  .photo-tile.span-2 {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-
-  .photo-grid.real .photo-tile.tall {
-    grid-row: span 1;
+  .photo-grid.real .photo-tile {
     aspect-ratio: 4 / 3;
   }
 }
@@ -406,6 +452,7 @@ main {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.9rem;
+  text-align: center;
 }
 
 .envelope-prompt.revealed {
@@ -522,8 +569,9 @@ textarea {
 
 .meal-options {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
 }
 
 .meal-options legend {
@@ -532,6 +580,7 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.85rem;
+  flex-basis: 100%;
 }
 
 .radio-option {
@@ -570,63 +619,76 @@ textarea {
   padding: 2.5rem 1rem;
   background: rgba(253, 247, 239, 0.06);
   border-top: none;
+  position: relative;
+  z-index: 1;
 }
 
 .invitation-hero {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   align-items: center;
-  justify-items: center;
   margin-bottom: 2rem;
 }
 
-.invitation-card {
+.envelope-stage {
   margin: 0;
-  width: min(520px, 95vw);
-  border-radius: 1.5rem;
+  position: relative;
+  width: min(560px, 92vw);
+  border-radius: 1.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
   overflow: hidden;
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45);
-  background: rgba(253, 247, 239, 0.06);
-  border: 1px solid rgba(253, 247, 239, 0.18);
+  background: rgba(253, 247, 239, 0.08);
+  border: 1px solid rgba(253, 247, 239, 0.2);
+  cursor: pointer;
+  transition: transform 250ms ease, box-shadow 250ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
 }
 
-.invitation-card img {
+.envelope-stage:hover,
+.envelope-stage:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+}
+
+#envelope-canvas {
   display: block;
   width: 100%;
   height: auto;
-}
-
-.wax-seal-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.wax-seal-button {
-  background: radial-gradient(circle at 30% 30%, #7c2b3a, #3b0f19 85%);
-  border: 2px solid rgba(253, 247, 239, 0.2);
-  border-radius: 50%;
-  padding: 0.6rem;
-  cursor: pointer;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
-  transition: transform 200ms ease, box-shadow 200ms ease;
-}
-
-.wax-seal-button:hover,
-.wax-seal-button:focus-visible {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 28px 50px rgba(0, 0, 0, 0.6);
-}
-
-#wax-seal-canvas {
-  display: block;
-  width: 220px;
-  height: 220px;
+  aspect-ratio: 4 / 3.2;
 }
 
 @media (max-width: 640px) {
+  .section {
+    padding: clamp(2rem, 10vw, 3rem) clamp(1.25rem, 8vw, 2.5rem);
+  }
+
+  .section::after {
+    left: clamp(1.25rem, 10vw, 2.75rem);
+    right: clamp(1.25rem, 10vw, 2.75rem);
+  }
+
+  .section:first-of-type::before,
+  .section + .section::before {
+    width: min(70%, 280px);
+  }
+
+  .section-header h2::after {
+    height: 2px;
+  }
+
+  .invitation-hero {
+    margin-inline: clamp(0.75rem, 6vw, 2rem);
+  }
+
+  .photo-grid.real {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 100%;
+  }
+
   .hero-heading {
     flex-direction: row;
   }

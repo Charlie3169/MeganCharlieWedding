@@ -23,9 +23,8 @@ const form = document.getElementById('rsvp-form') as HTMLFormElement | null;
 const summaryEl = document.getElementById('rsvp-summary');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.getElementById('nav-menu');
-const envelopePrompt = document.getElementById('envelope-prompt');
-const waxSealCanvas = document.getElementById('wax-seal-canvas') as HTMLCanvasElement | null;
-const waxSealButton = document.getElementById('wax-seal-btn') as HTMLButtonElement | null;
+const envelopeButton = document.getElementById('envelope-toggle') as HTMLButtonElement | null;
+const envelopeCanvas = document.getElementById('envelope-canvas') as HTMLCanvasElement | null;
 
 function hasExistingState(data: RSVPFormState): boolean {
   return Boolean(data.contactName || data.partyName || data.guestNames || data.phone);
@@ -90,15 +89,8 @@ function setRsvpVisibility(isOpen: boolean, shouldFocus = false): void {
   if (!form) return;
   form.hidden = !isOpen;
   form.classList.toggle('is-collapsed', !isOpen);
-  if (waxSealButton) {
-    waxSealButton.setAttribute('aria-expanded', String(isOpen));
-  }
-  if (envelopePrompt) {
-    envelopePrompt.classList.toggle('revealed', isOpen);
-    if (!envelopePrompt.dataset.opened && isOpen) {
-      envelopePrompt.textContent = 'RSVP form ready below';
-      envelopePrompt.dataset.opened = 'true';
-    }
+  if (envelopeButton) {
+    envelopeButton.setAttribute('aria-expanded', String(isOpen));
   }
   if (isOpen && shouldFocus) {
     const contactInput = form.elements.namedItem('contact');
@@ -171,56 +163,172 @@ function initNav(): void {
   });
 }
 
-async function initWaxSeal(): Promise<void> {
-  if (!waxSealCanvas || !waxSealButton) return;
+async function initEnvelope(): Promise<void> {
+  if (!envelopeButton || !envelopeCanvas) return;
+  envelopeButton.addEventListener('click', toggleRsvpForm);
 
-  waxSealButton.addEventListener('click', toggleRsvpForm);
+  // @ts-ignore external module loaded at runtime
+  const THREE = (await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js')) as any;
 
-  try {
-    // @ts-ignore external module loaded at runtime
-    const THREE = (await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js')) as any;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0, 7);
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 5);
+  const renderer = new THREE.WebGLRenderer({ canvas: envelopeCanvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-    const renderer = new THREE.WebGLRenderer({ canvas: waxSealCanvas, alpha: true, antialias: true });
-    renderer.setSize(waxSealCanvas.clientWidth || 220, waxSealCanvas.clientHeight || 220);
+  const resizeRenderer = (): void => {
+    const { clientWidth, clientHeight } = envelopeCanvas;
+    const width = clientWidth || 560;
+    const height = clientHeight || 420;
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  };
+  resizeRenderer();
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
-    scene.add(ambientLight);
-    const keyLight = new THREE.DirectionalLight(0xf7d9c4, 0.9);
-    keyLight.position.set(2, 3, 4);
-    scene.add(keyLight);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambientLight);
+  const keyLight = new THREE.DirectionalLight(0xfdf1df, 1.2);
+  keyLight.position.set(2.5, 3.5, 4);
+  scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  fillLight.position.set(-2.5, -1, 3);
+  scene.add(fillLight);
 
-    const waxMaterial = new THREE.MeshStandardMaterial({ color: 0x7a2435, roughness: 0.55, metalness: 0.18 });
-    const diskGeometry = new THREE.CircleGeometry(1.6, 128);
-    const disk = new THREE.Mesh(diskGeometry, waxMaterial);
-    disk.rotation.x = -0.5;
-    disk.rotation.z = 0.35;
-    scene.add(disk);
+  const envelopeGroup = new THREE.Group();
+  scene.add(envelopeGroup);
 
-    const crestShape = new THREE.Shape();
-    crestShape.absarc(0, 0, 0.55, 0, Math.PI * 2, false);
-    const crestGeometry = new THREE.ExtrudeGeometry(crestShape, { depth: 0.12, bevelEnabled: true, bevelSize: 0.08, bevelThickness: 0.06, bevelSegments: 6 });
-    const crestMaterial = new THREE.MeshStandardMaterial({ color: 0xf4e7d8, roughness: 0.35, metalness: 0.4 });
-    const crest = new THREE.Mesh(crestGeometry, crestMaterial);
-    crest.position.set(0.2, -0.2, 0.15);
-    crest.rotation.x = -0.45;
-    crest.rotation.z = 0.1;
-    scene.add(crest);
+  const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xf9f0e2, roughness: 0.55, metalness: 0.08 });
+  const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xefe1cd, roughness: 0.6, metalness: 0.08 });
+  const foldMaterial = new THREE.MeshStandardMaterial({ color: 0xe8d7c1, roughness: 0.62, metalness: 0.06 });
+  const flapMaterial = new THREE.MeshStandardMaterial({ color: 0xfff6ea, roughness: 0.52, metalness: 0.1 });
+  const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.05 });
+  const sealMaterial = new THREE.MeshStandardMaterial({ color: 0x932f43, roughness: 0.4, metalness: 0.25 });
 
-    function animate(): void {
-      crest.rotation.z += 0.006;
-      disk.rotation.z += 0.003;
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
-    }
+  const backGeometry = new THREE.BoxGeometry(5.4, 3.4, 0.24);
+  const back = new THREE.Mesh(backGeometry, paperMaterial);
+  back.position.set(0, -0.05, -0.08);
+  envelopeGroup.add(back);
 
-    animate();
-  } catch (error) {
-    console.error('Three.js could not be loaded for the wax seal interaction.', error);
-  }
+  const letterGeometry = new THREE.BoxGeometry(4.1, 2, 0.12);
+  const letter = new THREE.Mesh(letterGeometry, letterMaterial);
+  letter.position.set(0, -0.25, -0.02);
+  envelopeGroup.add(letter);
+
+  const frontShape = new THREE.Shape();
+  frontShape.moveTo(-2.7, 1.7);
+  frontShape.lineTo(2.7, 1.7);
+  frontShape.lineTo(2.7, -1.7);
+  frontShape.lineTo(-2.7, -1.7);
+  frontShape.lineTo(-2.7, 1.7);
+
+  const cutoutPath = new THREE.Path();
+  cutoutPath.moveTo(-2.7, 0.95);
+  cutoutPath.lineTo(2.7, 0.95);
+  cutoutPath.lineTo(0, -1.35);
+  cutoutPath.lineTo(-2.7, 0.95);
+  frontShape.holes.push(cutoutPath);
+
+  const frontGeometry = new THREE.ShapeGeometry(frontShape);
+  const front = new THREE.Mesh(frontGeometry, accentMaterial);
+  front.position.set(0, -0.05, 0.12);
+  envelopeGroup.add(front);
+
+  const openingShape = new THREE.Shape();
+  openingShape.moveTo(-2.3, 0.75);
+  openingShape.lineTo(2.3, 0.75);
+  openingShape.lineTo(0, -1.05);
+  openingShape.lineTo(-2.3, 0.75);
+  const openingGeometry = new THREE.ShapeGeometry(openingShape);
+  const opening = new THREE.Mesh(openingGeometry, foldMaterial);
+  opening.position.set(0, -0.05, 0.02);
+  envelopeGroup.add(opening);
+
+  const topFlapShape = new THREE.Shape();
+  topFlapShape.moveTo(-2.7, 0);
+  topFlapShape.lineTo(2.7, 0);
+  topFlapShape.lineTo(0, -2.35);
+  topFlapShape.lineTo(-2.7, 0);
+  const topFlapGeometry = new THREE.ExtrudeGeometry(topFlapShape, {
+    depth: 0.08,
+    bevelEnabled: false
+  });
+  const flap = new THREE.Mesh(topFlapGeometry, flapMaterial);
+  const flapPivot = new THREE.Group();
+  flapPivot.position.set(0, 1.62, 0.2);
+  flap.position.set(0, 0, -0.04);
+  flapPivot.add(flap);
+  envelopeGroup.add(flapPivot);
+
+  const sealGroup = new THREE.Group();
+  const sealGeometry = new THREE.CircleGeometry(0.5, 64);
+  const seal = new THREE.Mesh(sealGeometry, sealMaterial);
+  seal.position.set(0, 0, 0.08);
+  sealGroup.add(seal);
+
+  const sealInnerGeometry = new THREE.CircleGeometry(0.28, 48);
+  const sealInner = new THREE.Mesh(
+    sealInnerGeometry,
+    new THREE.MeshStandardMaterial({ color: 0xb14b5d, roughness: 0.35, metalness: 0.2 })
+  );
+  sealInner.position.set(0, 0, 0.1);
+  sealGroup.add(sealInner);
+
+  const sealRingGeometry = new THREE.TorusGeometry(0.34, 0.04, 32, 72);
+  const sealRing = new THREE.Mesh(
+    sealRingGeometry,
+    new THREE.MeshStandardMaterial({ color: 0x6e1f30, roughness: 0.4, metalness: 0.3 })
+  );
+  sealRing.position.set(0, 0, 0.11);
+  sealGroup.add(sealRing);
+
+  sealGroup.position.set(0, -2.05, 0.01);
+  flapPivot.add(sealGroup);
+
+  envelopeGroup.rotation.x = -0.01;
+  envelopeGroup.rotation.y = 0;
+
+  let hoverTarget = 0;
+  let hoverProgress = 0;
+  let openTarget = 0;
+  let openProgress = 0;
+
+  envelopeButton.addEventListener('pointerenter', () => {
+    hoverTarget = 1;
+  });
+  envelopeButton.addEventListener('pointerleave', () => {
+    hoverTarget = 0;
+  });
+
+  const updateOpenTarget = (): void => {
+    const isOpen = envelopeButton.getAttribute('aria-expanded') === 'true';
+    openTarget = isOpen ? 1 : 0;
+  };
+  updateOpenTarget();
+
+  const observer = new MutationObserver(updateOpenTarget);
+  observer.observe(envelopeButton, { attributes: true, attributeFilter: ['aria-expanded'] });
+
+  window.addEventListener('resize', resizeRenderer);
+
+  const animate = (): void => {
+    hoverProgress += (hoverTarget - hoverProgress) * 0.08;
+    openProgress += (openTarget - openProgress) * 0.06;
+    const combined = Math.min(1, openProgress + hoverProgress * 0.35);
+
+    const hoverLift = Math.max(0, hoverProgress - 0.25) / 0.75;
+    const letterLift = Math.max(0, openProgress - 0.05) / 0.95;
+    const baseFlapAngle = Math.PI * 0.08;
+    flapPivot.rotation.x = -(baseFlapAngle + combined * (Math.PI - baseFlapAngle));
+    letter.position.y = -0.25 + hoverLift * 0.15 + letterLift * 1.35;
+    envelopeGroup.position.y = -0.08 + combined * 0.04;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  };
+
+  animate();
 }
 
 function initPhotoInteractions(): void {
@@ -238,6 +346,6 @@ initPhotoInteractions();
 if (hasStoredRsvp) {
   revealRsvpForm();
 }
-initWaxSeal();
+initEnvelope();
 
 form?.addEventListener('submit', handleSubmit);

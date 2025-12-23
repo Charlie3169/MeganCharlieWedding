@@ -32,8 +32,43 @@ module.exports = {
           to: path.resolve(__dirname, 'dist', 'assets', 'css')
         },
         {
-          from: path.resolve(__dirname, 'public'),
-          to: path.resolve(__dirname, 'dist', 'public'),
+          from: path.resolve(__dirname, 'public', 'images', 'monogram.svg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'monogram.svg'),
+          noErrorOnMissing: true
+        },
+        {
+          from: path.resolve(__dirname, 'public', 'images', 'actual-images', 'OhioEngagement-193.jpg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'actual-images', 'OhioEngagement-193.jpg'),
+          noErrorOnMissing: true
+        },
+        {
+          from: path.resolve(__dirname, 'public', 'images', 'actual-images', 'OhioEngagement-25.jpg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'actual-images', 'OhioEngagement-25.jpg'),
+          noErrorOnMissing: true
+        },
+        {
+          from: path.resolve(__dirname, 'public', 'images', 'actual-images', 'OhioEngagement-44.jpg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'actual-images', 'OhioEngagement-44.jpg'),
+          noErrorOnMissing: true
+        },
+        {
+          from: path.resolve(__dirname, 'public', 'images', 'actual-images', 'OhioEngagement-103.jpg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'actual-images', 'OhioEngagement-103.jpg'),
+          noErrorOnMissing: true
+        },
+        {
+          from: path.resolve(__dirname, 'public', 'images', 'actual-images', 'OhioEngagement-181.jpg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'actual-images', 'OhioEngagement-181.jpg'),
+          noErrorOnMissing: true
+        },
+        {
+          from: path.resolve(__dirname, 'public', 'images', 'actual-images', 'OhioEngagement-238.jpg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'actual-images', 'OhioEngagement-238.jpg'),
+          noErrorOnMissing: true
+        },
+        {
+          from: path.resolve(__dirname, 'public', 'images', 'actual-images', 'OhioEngagement-210.jpg'),
+          to: path.resolve(__dirname, 'dist', 'public', 'images', 'actual-images', 'OhioEngagement-210.jpg'),
           noErrorOnMissing: true
         }
       ]

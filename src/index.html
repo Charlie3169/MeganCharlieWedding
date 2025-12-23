@@ -92,22 +92,22 @@
         <p>Moments from our engagement session in Dayton, captured in film-inspired warmth.</p>
       </div>
       <div class="photo-grid real">
-        <figure class="photo-tile span-2" data-photo>
+        <figure class="photo-tile" data-photo>
           <img src="public/images/actual-images/OhioEngagement-25.jpg" alt="Megan and Charlie laughing together outdoors" />
         </figure>
         <figure class="photo-tile" data-photo>
           <img src="public/images/actual-images/OhioEngagement-44.jpg" alt="Close-up of the couple holding hands" />
         </figure>
-        <figure class="photo-tile tall" data-photo>
+        <figure class="photo-tile" data-photo>
           <img src="public/images/actual-images/OhioEngagement-103.jpg" alt="Charlie dipping Megan during sunset" />
         </figure>
         <figure class="photo-tile" data-photo>
           <img src="public/images/actual-images/OhioEngagement-181.jpg" alt="The couple walking through a field" />
         </figure>
-        <figure class="photo-tile span-2" data-photo>
+        <figure class="photo-tile" data-photo>
           <img src="public/images/actual-images/OhioEngagement-238.jpg" alt="Joyful portrait of Megan and Charlie embracing" />
         </figure>
-        <figure class="photo-tile wide" data-photo>
+        <figure class="photo-tile" data-photo>
           <img src="public/images/actual-images/OhioEngagement-210.jpg" alt="Silhouette of the couple with evening sky" />
         </figure>
       </div>
@@ -115,7 +115,6 @@
 
     <section id="travel" class="section">
       <div class="section-header">
-        <p class="eyebrow">Make it a getaway</p>
         <h2>Travel &amp; Lodging</h2>
       </div>
       <div class="travel-grid">
@@ -154,14 +153,20 @@
       </div>
       <div class="registry-panel">
         <p>Visit the couple’s registry to shop curated pieces for their newlywed home.</p>
-        <a class="btn" href="https://www.zola.com/registry/meganandcharlie" target="_blank" rel="noreferrer">View registry</a>
+        <div class="registry-actions">
+          <a class="btn" href="https://www.zola.com/registry/meganandcharlie" target="_blank" rel="noreferrer">Zola registry</a>
+          <a class="btn" href="https://www.target.com/gift-registry" target="_blank" rel="noreferrer">Target</a>
+          <a class="btn" href="https://www.amazon.com/wedding" target="_blank" rel="noreferrer">Amazon</a>
+          <a class="btn" href="https://www.crateandbarrel.com/gift-registry/" target="_blank" rel="noreferrer">Crate &amp; Barrel</a>
+          <a class="btn" href="https://www.honeyfund.com/" target="_blank" rel="noreferrer">Honeyfund</a>
+        </div>
       </div>
     </section>
 
     <section id="rsvp" class="section">
       <div class="section-header">
         <h2>RSVP</h2>
-        <p>Use the form below to RSVP for yourself or your entire party. Your responses are stored locally so you can revisit and make changes.</p>
+        <p>Click the envelope below to RSVP.</p>
       </div>
       <!-- Original envelope invite preserved for reference
       <div class="envelope-invite" aria-live="polite">
@@ -183,24 +188,18 @@
       -->
 
       <div class="invitation-hero" aria-live="polite">
-        <figure class="invitation-card">
-          <img src="public/images/envelopes/save-our-date.svg" alt="Save the date invitation design" />
-        </figure>
-        <div class="wax-seal-panel">
-          <p class="envelope-prompt" id="envelope-prompt">Tap the wax seal to open or close your RSVP</p>
-          <button
-            type="button"
-            class="wax-seal-button"
-            id="wax-seal-btn"
-            aria-controls="rsvp-form"
-            aria-expanded="false"
-          >
-            <canvas id="wax-seal-canvas" width="220" height="220" aria-hidden="true"></canvas>
-            <span class="sr-only">Toggle the RSVP form</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          class="envelope-stage"
+          id="envelope-toggle"
+          aria-controls="rsvp-form"
+          aria-expanded="false"
+        >
+          <canvas id="envelope-canvas" width="560" height="420" aria-hidden="true"></canvas>
+          <span class="sr-only">Open the RSVP form</span>
+        </button>
       </div>
-      <form class="rsvp-form is-collapsed" id="rsvp-form" aria-describedby="envelope-prompt" hidden>
+      <form class="rsvp-form is-collapsed" id="rsvp-form" hidden>
         <div class="form-grid">
           <label>
             Contact name

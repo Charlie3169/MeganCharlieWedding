@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack --watch --mode development",
-    "start": "npm run build && node server.js"
+    "start": "node scripts/devServer.js"
   },
   "keywords": ["wedding", "static-site", "typescript"],
   "author": "",
