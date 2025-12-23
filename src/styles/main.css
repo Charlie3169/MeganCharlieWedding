@@ -215,7 +215,7 @@ main {
 .section + .section::before {
   content: '';
   position: absolute;
-  top: 0.75rem;
+  top: 1.5rem;
   left: 50%;
   width: min(55%, 520px);
   height: 1px;
