@@ -201,6 +201,7 @@ async function initEnvelope(): Promise<void> {
 
   const paperMaterial = new THREE.MeshStandardMaterial({ color: 0xf9f0e2, roughness: 0.55, metalness: 0.08 });
   const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xefe1cd, roughness: 0.6, metalness: 0.08 });
+  const foldMaterial = new THREE.MeshStandardMaterial({ color: 0xe8d7c1, roughness: 0.62, metalness: 0.06 });
   const flapMaterial = new THREE.MeshStandardMaterial({ color: 0xfff6ea, roughness: 0.52, metalness: 0.1 });
   const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.05 });
   const sealMaterial = new THREE.MeshStandardMaterial({ color: 0x932f43, roughness: 0.4, metalness: 0.25 });
@@ -214,6 +215,36 @@ async function initEnvelope(): Promise<void> {
   const front = new THREE.Mesh(frontGeometry, accentMaterial);
   front.position.set(0, -0.05, 0.22);
   envelopeGroup.add(front);
+
+  const leftFoldShape = new THREE.Shape();
+  leftFoldShape.moveTo(-2.7, 1.7);
+  leftFoldShape.lineTo(0, -0.3);
+  leftFoldShape.lineTo(-2.7, -1.7);
+  leftFoldShape.lineTo(-2.7, 1.7);
+  const leftFoldGeometry = new THREE.ShapeGeometry(leftFoldShape);
+  const leftFold = new THREE.Mesh(leftFoldGeometry, foldMaterial);
+  leftFold.position.set(0, -0.05, 0.23);
+  envelopeGroup.add(leftFold);
+
+  const rightFoldShape = new THREE.Shape();
+  rightFoldShape.moveTo(2.7, 1.7);
+  rightFoldShape.lineTo(0, -0.3);
+  rightFoldShape.lineTo(2.7, -1.7);
+  rightFoldShape.lineTo(2.7, 1.7);
+  const rightFoldGeometry = new THREE.ShapeGeometry(rightFoldShape);
+  const rightFold = new THREE.Mesh(rightFoldGeometry, foldMaterial);
+  rightFold.position.set(0, -0.05, 0.235);
+  envelopeGroup.add(rightFold);
+
+  const bottomFoldShape = new THREE.Shape();
+  bottomFoldShape.moveTo(-2.7, -1.7);
+  bottomFoldShape.lineTo(0, -0.3);
+  bottomFoldShape.lineTo(2.7, -1.7);
+  bottomFoldShape.lineTo(-2.7, -1.7);
+  const bottomFoldGeometry = new THREE.ShapeGeometry(bottomFoldShape);
+  const bottomFold = new THREE.Mesh(bottomFoldGeometry, foldMaterial);
+  bottomFold.position.set(0, -0.05, 0.24);
+  envelopeGroup.add(bottomFold);
 
   const frontFlapShape = new THREE.Shape();
   frontFlapShape.moveTo(-2.7, 0);
@@ -232,7 +263,7 @@ async function initEnvelope(): Promise<void> {
   openingShape.lineTo(-2.4, 0);
   const openingGeometry = new THREE.ShapeGeometry(openingShape);
   const opening = new THREE.Mesh(openingGeometry, new THREE.MeshStandardMaterial({ color: 0xdcc9b0, roughness: 0.75, metalness: 0.05 }));
-  opening.position.set(0, 0.35, 0.18);
+  opening.position.set(0, 0.4, 0.19);
   envelopeGroup.add(opening);
 
   const topFlapShape = new THREE.Shape();
@@ -253,7 +284,7 @@ async function initEnvelope(): Promise<void> {
 
   const letterGeometry = new THREE.BoxGeometry(4.1, 2.5, 0.16);
   const letter = new THREE.Mesh(letterGeometry, letterMaterial);
-  letter.position.set(0, -0.5, 0.08);
+  letter.position.set(0, -0.5, 0.05);
   envelopeGroup.add(letter);
 
   const sealGroup = new THREE.Group();
@@ -278,10 +309,10 @@ async function initEnvelope(): Promise<void> {
   sealRing.position.set(0, 0, 0.11);
   sealGroup.add(sealRing);
 
-  sealGroup.position.set(0, -0.9, 0.12);
+  sealGroup.position.set(0, -1.15, 0.12);
   flapPivot.add(sealGroup);
 
-  envelopeGroup.rotation.x = -0.015;
+  envelopeGroup.rotation.x = -0.01;
   envelopeGroup.rotation.y = 0;
 
   let hoverTarget = 0;
@@ -312,12 +343,11 @@ async function initEnvelope(): Promise<void> {
     openProgress += (openTarget - openProgress) * 0.06;
     const combined = Math.min(1, openProgress + hoverProgress * 0.35);
 
-    const letterLift = Math.max(0, combined - 0.4) / 0.6;
-    const baseFlapAngle = Math.PI * 0.28;
+    const letterLift = Math.max(0, combined - 0.42) / 0.58;
+    const baseFlapAngle = Math.PI * 0.12;
     flapPivot.rotation.x = -(baseFlapAngle + combined * (Math.PI - baseFlapAngle));
     letter.position.y = -0.5 + letterLift * 1.15;
     envelopeGroup.position.y = combined * 0.15;
-    envelopeGroup.rotation.z = combined * 0.04;
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);

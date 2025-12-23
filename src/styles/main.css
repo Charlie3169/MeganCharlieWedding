@@ -197,8 +197,8 @@ main {
 .section::after {
   content: '';
   position: absolute;
-  top: 1.75rem;
-  bottom: 1.75rem;
+  top: 25%;
+  height: 50%;
   left: clamp(1.25rem, 4vw, 3.75rem);
   right: clamp(1.25rem, 4vw, 3.75rem);
   background-image:
@@ -211,12 +211,13 @@ main {
   z-index: 1;
 }
 
+.section:first-of-type::before,
 .section + .section::before {
   content: '';
   position: absolute;
   top: 0.75rem;
   left: 50%;
-  width: min(35%, 360px);
+  width: min(55%, 520px);
   height: 1px;
   transform: translateX(-50%);
   background: rgba(253, 247, 239, 0.35);
