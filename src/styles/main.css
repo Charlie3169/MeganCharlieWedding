@@ -234,6 +234,24 @@ main {
   margin: 0 auto 2rem;
 }
 
+.section-header h2 {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(60%, 240px);
+  height: 3px;
+  background: rgba(253, 247, 239, 0.6);
+  transform: translateX(-50%);
+  border-radius: 999px;
+}
+
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.35em;
@@ -640,10 +658,37 @@ textarea {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 3.2;
 }
 
 @media (max-width: 640px) {
+  .section {
+    padding: clamp(2rem, 10vw, 3rem) clamp(1.25rem, 8vw, 2.5rem);
+  }
+
+  .section::after {
+    left: clamp(1.25rem, 10vw, 2.75rem);
+    right: clamp(1.25rem, 10vw, 2.75rem);
+  }
+
+  .section:first-of-type::before,
+  .section + .section::before {
+    width: min(70%, 280px);
+  }
+
+  .section-header h2::after {
+    height: 2px;
+  }
+
+  .invitation-hero {
+    margin-inline: clamp(0.75rem, 6vw, 2rem);
+  }
+
+  .photo-grid.real {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 100%;
+  }
+
   .hero-heading {
     flex-direction: row;
   }
