@@ -206,9 +206,9 @@ async function initEnvelope(): Promise<void> {
   const letterMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0.05 });
   const sealMaterial = new THREE.MeshStandardMaterial({ color: 0x932f43, roughness: 0.4, metalness: 0.25 });
 
-  const backGeometry = new THREE.BoxGeometry(5.4, 3.4, 0.2);
+  const backGeometry = new THREE.BoxGeometry(5.4, 3.4, 0.24);
   const back = new THREE.Mesh(backGeometry, paperMaterial);
-  back.position.set(0, -0.05, 0);
+  back.position.set(0, -0.05, -0.02);
   envelopeGroup.add(back);
 
   const letterGeometry = new THREE.BoxGeometry(4.15, 2.05, 0.14);
@@ -224,10 +224,10 @@ async function initEnvelope(): Promise<void> {
   frontShape.lineTo(-2.7, 1.7);
 
   const cutoutPath = new THREE.Path();
-  cutoutPath.moveTo(-2.7, 0.95);
-  cutoutPath.lineTo(2.7, 0.95);
-  cutoutPath.lineTo(0, -1.2);
-  cutoutPath.lineTo(-2.7, 0.95);
+  cutoutPath.moveTo(-2.7, 0.9);
+  cutoutPath.lineTo(2.7, 0.9);
+  cutoutPath.lineTo(0, -1.25);
+  cutoutPath.lineTo(-2.7, 0.9);
   frontShape.holes.push(cutoutPath);
 
   const frontGeometry = new THREE.ShapeGeometry(frontShape);
@@ -236,19 +236,19 @@ async function initEnvelope(): Promise<void> {
   envelopeGroup.add(front);
 
   const openingShape = new THREE.Shape();
-  openingShape.moveTo(-2.2, 0.7);
-  openingShape.lineTo(2.2, 0.7);
-  openingShape.lineTo(0, -0.8);
-  openingShape.lineTo(-2.2, 0.7);
+  openingShape.moveTo(-2.2, 0.65);
+  openingShape.lineTo(2.2, 0.65);
+  openingShape.lineTo(0, -0.85);
+  openingShape.lineTo(-2.2, 0.65);
   const openingGeometry = new THREE.ShapeGeometry(openingShape);
   const opening = new THREE.Mesh(openingGeometry, foldMaterial);
-  opening.position.set(0, -0.05, 0.2);
+  opening.position.set(0, -0.05, 0.21);
   envelopeGroup.add(opening);
 
   const topFlapShape = new THREE.Shape();
   topFlapShape.moveTo(-2.7, 0);
   topFlapShape.lineTo(2.7, 0);
-  topFlapShape.lineTo(0, -2.15);
+  topFlapShape.lineTo(0, -2.35);
   topFlapShape.lineTo(-2.7, 0);
   const topFlapGeometry = new THREE.ExtrudeGeometry(topFlapShape, {
     depth: 0.08,
@@ -256,7 +256,7 @@ async function initEnvelope(): Promise<void> {
   });
   const flap = new THREE.Mesh(topFlapGeometry, flapMaterial);
   const flapPivot = new THREE.Group();
-  flapPivot.position.set(0, 1.55, 0.24);
+  flapPivot.position.set(0, 1.62, 0.24);
   flap.position.set(0, 0, -0.04);
   flapPivot.add(flap);
   envelopeGroup.add(flapPivot);
@@ -283,7 +283,7 @@ async function initEnvelope(): Promise<void> {
   sealRing.position.set(0, 0, 0.11);
   sealGroup.add(sealRing);
 
-  sealGroup.position.set(0, -1.85, 0.01);
+  sealGroup.position.set(0, -1.95, 0.01);
   flapPivot.add(sealGroup);
 
   envelopeGroup.rotation.x = -0.01;
@@ -318,10 +318,10 @@ async function initEnvelope(): Promise<void> {
     const combined = Math.min(1, openProgress + hoverProgress * 0.35);
 
     const hoverLift = Math.max(0, hoverProgress - 0.25) / 0.75;
-    const letterLift = Math.max(0, openProgress - 0.18) / 0.82;
+    const letterLift = Math.max(0, openProgress - 0.1) / 0.9;
     const baseFlapAngle = Math.PI * 0.08;
     flapPivot.rotation.x = -(baseFlapAngle + combined * (Math.PI - baseFlapAngle));
-    letter.position.y = -0.15 + hoverLift * 0.18 + letterLift * 1.05;
+    letter.position.y = -0.15 + hoverLift * 0.18 + letterLift * 1.35;
     envelopeGroup.position.y = -0.08 + combined * 0.04;
 
     renderer.render(scene, camera);
